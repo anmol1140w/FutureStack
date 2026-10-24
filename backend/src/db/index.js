@@ -17,6 +17,9 @@ export const pool = new Pool({
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 5000,
+  ssl: process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost') && !process.env.DATABASE_URL.includes('127.0.0.1')
+    ? { rejectUnauthorized: false }
+    : undefined,
 });
 
 pool.on('error', (err) => {
@@ -26,9 +29,13 @@ pool.on('error', (err) => {
 export async function initDatabase() {
   const client = await pool.connect();
   try {
-    // Register pgvector types on the client
+    // 1. Ensure the pgvector extension is created BEFORE registering types
+    await client.query('CREATE EXTENSION IF NOT EXISTS vector;');
+
+    // 2. Register pgvector types on the client (now that the type exists)
     await pgvector.registerTypes(client);
     
+    // 3. Initialize schema tables
     const initSqlPath = path.join(__dirname, 'init.sql');
     const initSql = fs.readFileSync(initSqlPath, 'utf8');
     await client.query(initSql);
