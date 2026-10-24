@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://futurestack-backend-gcp0.onrender.com/api/:path*"
+    }
+  ]
+}

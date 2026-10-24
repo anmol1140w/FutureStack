@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { BACKEND_URL } from './api.js';
 
 class SocketService {
   constructor() {
@@ -9,8 +10,8 @@ class SocketService {
   connect() {
     if (this.socket) return this.socket;
 
-    // Connect to same host via Vite proxy or direct port
-    this.socket = io('/', {
+    // Connect to Render backend in production, or localhost/proxy in development
+    this.socket = io(BACKEND_URL || '/', {
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 10,
       reconnectionDelay: 1000

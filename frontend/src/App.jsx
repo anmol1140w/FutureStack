@@ -7,6 +7,7 @@ import GovernanceQueue from './components/GovernanceQueue';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import GuidelineModal from './components/GuidelineModal';
 import socketService from './services/socketService';
+import { apiUrl } from './services/api';
 import {
   Sparkles,
   Zap,
@@ -90,7 +91,7 @@ export default function App() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('/api/governance/users');
+      const res = await fetch(apiUrl('/api/governance/users'));
       if (res.ok) {
         const data = await res.json();
         if (data.users && data.users.length > 0) {
@@ -105,7 +106,7 @@ export default function App() {
 
   const fetchGuidelines = async () => {
     try {
-      const res = await fetch('/api/guidelines');
+      const res = await fetch(apiUrl('/api/guidelines'));
       if (res.ok) {
         const data = await res.json();
         setGuidelines(data.guidelines || []);
@@ -117,7 +118,7 @@ export default function App() {
 
   const fetchQueueCount = async () => {
     try {
-      const res = await fetch('/api/governance/queue?status=PENDING');
+      const res = await fetch(apiUrl('/api/governance/queue?status=PENDING'));
       if (res.ok) {
         const data = await res.json();
         setPendingQueueCount(data.queue ? data.queue.length : 0);
@@ -155,7 +156,7 @@ export default function App() {
 
     try {
       setIsSubmittingQueue(true);
-      const res = await fetch('/api/governance/submit', {
+      const res = await fetch(apiUrl('/api/governance/submit'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -190,7 +191,7 @@ export default function App() {
   };
 
   const handleAddGuideline = async (guidelineData) => {
-    const res = await fetch('/api/guidelines', {
+    const res = await fetch(apiUrl('/api/guidelines'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(guidelineData)

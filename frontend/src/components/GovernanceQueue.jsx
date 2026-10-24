@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiUrl } from '../services/api';
 import {
   ClipboardList,
   CheckCircle2,
@@ -44,7 +45,7 @@ export default function GovernanceQueue({
   const fetchQueue = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/governance/queue?status=${filterStatus}`);
+      const res = await fetch(apiUrl(`/api/governance/queue?status=${filterStatus}`));
       if (res.ok) {
         const data = await res.json();
         setQueue(data.queue || []);
@@ -67,7 +68,7 @@ export default function GovernanceQueue({
     setSelectedReview(review);
     setVerificationResult(null);
     try {
-      const res = await fetch(`/api/governance/audit-trail/${review.id}`);
+      const res = await fetch(apiUrl(`/api/governance/audit-trail/${review.id}`));
       if (res.ok) {
         const data = await res.json();
         setAuditTrail(data.auditTrail || []);
@@ -80,7 +81,7 @@ export default function GovernanceQueue({
 
   const handleVerifySignature = async (reviewId) => {
     try {
-      const res = await fetch(`/api/governance/verify-signature/${reviewId}`);
+      const res = await fetch(apiUrl(`/api/governance/verify-signature/${reviewId}`));
       if (res.ok) {
         const data = await res.json();
         setVerificationResult(data);
@@ -93,7 +94,7 @@ export default function GovernanceQueue({
   const handleApprove = async () => {
     if (!selectedReview) return;
     try {
-      const res = await fetch(`/api/governance/approve/${selectedReview.id}`, {
+      const res = await fetch(apiUrl(`/api/governance/approve/${selectedReview.id}`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -119,7 +120,7 @@ export default function GovernanceQueue({
   const handleRequestRevisions = async () => {
     if (!selectedReview) return;
     try {
-      const res = await fetch(`/api/governance/request-revisions/${selectedReview.id}`, {
+      const res = await fetch(apiUrl(`/api/governance/request-revisions/${selectedReview.id}`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

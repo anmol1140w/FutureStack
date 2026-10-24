@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiUrl } from '../services/api';
 import {
   BarChart3,
   TrendingUp,
@@ -24,7 +25,7 @@ export default function AnalyticsDashboard() {
 
   const fetchAnalytics = async () => {
     try {
-      const res = await fetch('/api/analytics/dashboard');
+      const res = await fetch(apiUrl('/api/analytics/dashboard'));
       if (res.ok) {
         const data = await res.json();
         setAnalytics(data);
